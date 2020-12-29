@@ -1,10 +1,12 @@
+import os
 from io import BytesIO
 from zipfile import ZipFile
 from base64 import b64encode, b64decode
 from importlib import import_module
+from . import fs
 
 
-def save(path, **data):
+def save(path, filter=lambda _: True, **data):
     '''
     生成指定的压缩源码文件。
     '''
@@ -13,7 +15,14 @@ def save(path, **data):
     for p, n in data.items():
         with BytesIO() as bio:
             with ZipFile(bio, 'w') as zf:
-                zf.write(p, n)
+                if os.path.isfile(p):
+                    if filter(n):
+                        zf.write(p, n)
+                elif os.path.isdir(p):
+                    for cp in fs.list_files(p):
+                        cn = os.path.relpath(cp, p)
+                        if filter(n):
+                            zf.write(cp, cn)
             r = b64encode(bio.getbuffer())
             lines.append(f'{n}={r}')
     with open(path, 'w', encoding='utf8') as writer:
@@ -33,3 +42,15 @@ def load(module, name):
                 r = BytesIO(zf.read(name))
                 m.___pkg___[name] = r
     return m.___pkg___[name]
+
+
+def cast(module, name, path):
+    '''
+    提取压缩模块的指定文件到指定路径。
+    '''
+
+    m = import_module(module)
+    b = b64decode(getattr(m, name))
+    with BytesIO(b) as bio:
+        with ZipFile(bio, 'r') as zf:
+            zf.extractall(path)
