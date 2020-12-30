@@ -3,7 +3,7 @@ from ran import fs
 
 setuptools.setup(
     name='ran',
-    version='0.0.4',
+    version='0.0.5',
     description='yet a library.',
     long_description=fs.load('readme.md'),
     long_description_content_type='text/markdown',

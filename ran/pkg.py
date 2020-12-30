@@ -29,7 +29,7 @@ def save(path, filter=lambda x, y: True, **data):
         writer.writelines(lines)
 
 
-def load(module, name):
+def load(module, name, raw=False):
     '''
     获取压缩模块的指定数据。
     '''
@@ -39,9 +39,9 @@ def load(module, name):
         b = b64decode(getattr(m, name))
         with BytesIO(b) as bio:
             with ZipFile(bio, 'r') as zf:
-                r = BytesIO(zf.read(name))
-                m.___pkg___[name] = r
-    return m.___pkg___[name]
+                m.___pkg___[name] = zf.read(name)
+    r = m.___pkg___[name]
+    return r if raw else BytesIO(r)
 
 
 def cast(module, name, path):
