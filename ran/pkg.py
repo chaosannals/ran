@@ -1,3 +1,7 @@
+'''
+package
+'''
+
 import os
 from io import BytesIO
 from zipfile import ZipFile
