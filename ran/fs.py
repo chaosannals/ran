@@ -5,24 +5,20 @@ filesystem
 import os
 
 
-def load(path, **kws):
+def load(path, mode='r', encoding='utf8'):
     '''
     加载文件内容。
     '''
 
-    mode = kws.get('mode', 'r')
-    encoding = kws.get('encoding', 'utf8')
     with open(path, mode, encoding=encoding) as reader:
         return reader.read()
 
 
-def save(path, data, **kws):
+def save(path, data, mode='w', encoding='utf8'):
     '''
     写入文件内容。
     '''
 
-    mode = kws.get('mode', 'w')
-    encoding = kws.get('encoding', 'utf8')
     with open(path, mode, encoding=encoding) as writer:
         writer.write(data)
 
