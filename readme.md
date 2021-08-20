@@ -16,3 +16,11 @@ from ran import fs
 # 读取文件内容
 content = fs.load('path')
 ```
+
+### mm
+
+```python
+from ran.mm import ModuleReloader
+mr = ModuleReloader()
+mr.watch()
+```
