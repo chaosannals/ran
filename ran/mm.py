@@ -5,6 +5,7 @@ from threading import Thread
 from inspect import getmodule
 from importlib import import_module, reload
 
+
 def list_module_mtime() -> dict:
     '''
     列举模块文件修改时间。
@@ -18,6 +19,7 @@ def list_module_mtime() -> dict:
             result[n] = s.st_mtime_ns
     return result
 
+
 def diff_module_mtime(one: dict, two: dict) -> dict:
     '''
     比较模块前后的修改时间。
@@ -30,7 +32,6 @@ def diff_module_mtime(one: dict, two: dict) -> dict:
             result[n] = max(tt, t)
     return result
 
-    
 
 class ModuleReloader:
     '''
@@ -41,7 +42,7 @@ class ModuleReloader:
         '''
         设置初始值。
         '''
-        
+
         self.ticker = None
         self.able = True
         self.mts = list_module_mtime()
@@ -60,7 +61,6 @@ class ModuleReloader:
             self.ticker.daemon = True
             self.ticker.start()
 
-
     def reload(self):
         '''
         重新加载模块。
@@ -74,7 +74,7 @@ class ModuleReloader:
                 continue
             m = import_module(n)
             reload(m)
-        
+
         # 替换 from xx import xx 引入的变量。
         for n in nmts.keys():
             m = import_module(n)
@@ -87,4 +87,3 @@ class ModuleReloader:
                     nv = getattr(im, k)
                     setattr(m, k, nv)
         self.mts = nmts
-
