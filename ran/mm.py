@@ -74,16 +74,17 @@ class ModuleReloader:
                 continue
             m = import_module(n)
             reload(m)
-
+        
         # 替换 from xx import xx 引入的变量。
-        for n in nmts.keys():
-            m = import_module(n)
-            for k, v in m.__dict__.items():
-                if not hasattr(v, '__module__'):
-                    continue
-                imn = getattr(v, '__module__')
-                if imn in mmts:
-                    im = getmodule(v)
-                    nv = getattr(im, k)
-                    setattr(m, k, nv)
+        if len(mmts) > 0:
+            for n in nmts.keys():
+                m = import_module(n)
+                for k, v in m.__dict__.items():
+                    if not hasattr(v, '__module__'):
+                        continue
+                    imn = getattr(v, '__module__')
+                    if imn in mmts:
+                        im = getmodule(v)
+                        nv = getattr(im, k)
+                        setattr(m, k, nv)
         self.mts = nmts
